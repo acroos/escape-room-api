@@ -159,3 +159,11 @@ It looks like the integration tests don't run as part of CI
 No we can skip these. The test sounds nice but I'll just prioritize fast tests for now as this simply won't happen in my demo situation.
 
 One thing I do want to note: my environment variable for DATABASE_URL in production is actually POSTGRES_URL. Let's change the name in our code so I don't have to rename it in vercel
+
+## Prompt 21 (2026-03-24)
+
+My production POSTGRES_URL doesn't include the db name, so let's update the drizzle config and the local env vars to set the database name separate from the url
+
+## Prompt 22 (2026-03-24)
+
+OK, one more improvement I'd like to make. The timeslot should always come in as just a number (seconds from epoch). This makes our GET routes much cleaner and our redis keys as well

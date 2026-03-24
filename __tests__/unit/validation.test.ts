@@ -7,30 +7,33 @@ import { buildRedisKey } from '@/lib/redis/holds';
 
 describe('validateTimeslot', () => {
   it('accepts a timeslot on the hour', () => {
-    expect(validateTimeslot(new Date('2026-04-01T10:00:00.000Z'))).toBe(true);
+    // 2026-04-01T10:00:00Z = 1775048400
+    expect(validateTimeslot(1775048400)).toBe(true);
   });
 
-  it('rejects a timeslot with non-zero minutes', () => {
-    expect(validateTimeslot(new Date('2026-04-01T10:30:00.000Z'))).toBe(false);
+  it('rejects a timeslot not divisible by 3600', () => {
+    // 10:30 = 1775048400 + 1800
+    expect(validateTimeslot(1775050200)).toBe(false);
   });
 
-  it('rejects a timeslot with non-zero seconds', () => {
-    expect(validateTimeslot(new Date('2026-04-01T10:00:15.000Z'))).toBe(false);
+  it('rejects zero', () => {
+    expect(validateTimeslot(0)).toBe(false);
   });
 
-  it('rejects a timeslot with non-zero milliseconds', () => {
-    expect(validateTimeslot(new Date('2026-04-01T10:00:00.500Z'))).toBe(false);
+  it('rejects negative values', () => {
+    expect(validateTimeslot(-3600)).toBe(false);
   });
 
-  it('accepts midnight', () => {
-    expect(validateTimeslot(new Date('2026-04-01T00:00:00.000Z'))).toBe(true);
+  it('accepts midnight epoch', () => {
+    // 1970-01-01T01:00:00Z = 3600
+    expect(validateTimeslot(3600)).toBe(true);
   });
 });
 
 describe('buildRedisKey', () => {
   it('returns the correct format', () => {
-    expect(buildRedisKey('room-123', '2026-04-01T10:00:00.000Z')).toBe(
-      'room:room-123:2026-04-01T10:00:00.000Z',
+    expect(buildRedisKey('room-123', 1775048400)).toBe(
+      'room:room-123:1775048400',
     );
   });
 });

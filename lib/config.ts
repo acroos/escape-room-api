@@ -14,11 +14,13 @@ function required(name: string): string {
 }
 
 export interface Config {
-  databaseUrl: string;
+  postgresUrl: string;
+  postgresDatabase: string;
   redisUrl: string;
 }
 
 export const config: Config = {
-  databaseUrl: required('POSTGRES_URL'),
+  postgresUrl: required('POSTGRES_URL'),
+  postgresDatabase: required('POSTGRES_DATABASE'),
   redisUrl: required('REDIS_URL'),
 };

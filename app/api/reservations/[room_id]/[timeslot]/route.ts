@@ -15,7 +15,7 @@ export async function GET(
     );
   }
 
-  const result = await getHold(room_id, new Date(timeslot), code);
+  const result = await getHold(room_id, Number(timeslot), code);
 
   if (!result.ok) {
     const statusMap = {

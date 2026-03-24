@@ -9,8 +9,10 @@ import { POST as releaseHandler } from '@/app/api/reservations/release/route';
 import type { NextRequest } from 'next/server';
 
 let testRoomId: string;
-const TIMESLOT = '2026-06-01T14:00:00.000Z';
-const TIMESLOT_2 = '2026-06-01T15:00:00.000Z';
+// 2026-06-01T14:00:00Z
+const TIMESLOT = 1780333200;
+// 2026-06-01T15:00:00Z
+const TIMESLOT_2 = 1780336800;
 
 function makeRequest(
   url: string,
@@ -62,7 +64,7 @@ afterAll(async () => {
   await db.execute(
     sql`TRUNCATE TABLE reservations, rooms RESTART IDENTITY CASCADE`,
   );
-  redis.disconnect();
+  await redis.quit();
   await closeDb();
 });
 
@@ -101,7 +103,7 @@ describe('POST /api/reservations/hold', () => {
       makeRequest('http://localhost/api/reservations/hold', {
         body: {
           room_id: testRoomId,
-          timeslot: '2026-06-01T14:30:00.000Z',
+          timeslot: TIMESLOT + 1800,
         },
       }),
     );
@@ -144,7 +146,7 @@ describe('GET /api/reservations/[room_id]/[timeslot]', () => {
       {
         params: Promise.resolve({
           room_id: testRoomId,
-          timeslot: TIMESLOT,
+          timeslot: String(TIMESLOT),
         }),
       },
     );
@@ -169,7 +171,7 @@ describe('GET /api/reservations/[room_id]/[timeslot]', () => {
       {
         params: Promise.resolve({
           room_id: testRoomId,
-          timeslot: TIMESLOT,
+          timeslot: String(TIMESLOT),
         }),
       },
     );
@@ -185,7 +187,7 @@ describe('GET /api/reservations/[room_id]/[timeslot]', () => {
       {
         params: Promise.resolve({
           room_id: testRoomId,
-          timeslot: TIMESLOT,
+          timeslot: String(TIMESLOT),
         }),
       },
     );
@@ -319,7 +321,7 @@ describe('POST /api/reservations/release', () => {
       {
         params: Promise.resolve({
           room_id: testRoomId,
-          timeslot: TIMESLOT,
+          timeslot: String(TIMESLOT),
         }),
       },
     );

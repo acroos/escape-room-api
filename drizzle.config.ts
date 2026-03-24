@@ -6,6 +6,6 @@ export default defineConfig({
   schema: './lib/db/schema.ts',
   out: './drizzle',
   dbCredentials: {
-    url: config.databaseUrl,
+    url: `${config.postgresUrl}/${config.postgresDatabase}`,
   },
 });

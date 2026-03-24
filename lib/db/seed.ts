@@ -5,7 +5,9 @@ import { config } from '../config';
 import { rooms } from './schema';
 
 async function seed() {
-  const client = postgres(config.databaseUrl);
+  const client = postgres(config.postgresUrl, {
+    database: config.postgresDatabase,
+  });
   const db = drizzle(client);
 
   console.log('Truncating tables...');
