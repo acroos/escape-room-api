@@ -117,3 +117,7 @@ PR 1 has been merged to main. Make sure to pull the latest changes and move on t
 ## Prompt 10 (2026-03-24)
 
 Do we not need to import dotenv in config.ts? I also prefer if we call the config with { override: true }
+
+## Prompt 11 (2026-03-24)
+
+Setting the path to .env.local will break in production
