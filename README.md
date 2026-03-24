@@ -50,6 +50,7 @@ npm run dev
 | `npm run db:generate`  | Generate Drizzle migration files |
 | `npm run db:migrate`   | Apply migrations to database     |
 | `npm run db:seed`      | Seed database (truncates first)  |
+| `npm run db:studio`    | Open Drizzle Studio GUI          |
 
 ### Environment variables
 
