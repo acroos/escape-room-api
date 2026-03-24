@@ -153,6 +153,7 @@ Three-layer separation:
 **What**:
 
 **Storage layer** — `lib/redis/`:
+
 - Install `ioredis`
 - Create Redis client in `lib/redis/index.ts`
 - Create hold store in `lib/redis/holds.ts` — thin wrapper over ioredis, no business logic:
@@ -163,10 +164,12 @@ Three-layer separation:
 - Helper: `buildRedisKey(roomId, timeslot)` → `room:{roomId}:{timeslot}`
 
 **Storage layer** — `lib/db/repositories/`:
+
 - `rooms.ts` — `findById(roomId)`: looks up a room by ID
 - `reservations.ts` — `findByRoomAndTimeslot(roomId, timeslot)`, `create(data)`: raw DB queries
 
 **Business logic layer** — `lib/reservations/service.ts`:
+
 - Depends on hold store + DB repositories (injected or imported), never on HTTP concepts
 - `holdRoom(roomId, timeslot)` — validates timeslot on the hour, validates room exists, checks no confirmed reservation exists, calls `setHold()`, returns typed result (success w/ code, or error reason)
 - `getHold(roomId, timeslot, code)` — fetches hold, compares code, returns `{ ttl }` or error reason
@@ -177,6 +180,7 @@ Three-layer separation:
 - Add decision record for Lua script approach to atomic confirm
 
 **Unit Tests** (`__tests__/unit/`):
+
 - **Timeslot validation**: valid (on the hour), invalid (minutes/seconds not zero)
 - **Redis key builder**: correct format
 - **Service layer** (mock repositories + hold store):
@@ -216,6 +220,7 @@ Route handlers are thin — they parse HTTP inputs, call the service, and map re
 - Update seed script if needed
 
 **Integration Tests** (`__tests__/integration/`):
+
 - Requires running Docker services (Postgres + Redis)
 - **Hold flow**:
   - Hold a room → 201

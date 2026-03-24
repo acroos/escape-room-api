@@ -97,3 +97,15 @@ This looks pretty good. A tiny detail I'm noticing is that you don't mention ins
 ## Prompt 5 (2026-03-24)
 
 I think this looks good, before getting started on any of these PRs, let's commit this plans directory. Once you've committed that (you can make this first commit directly on main), then go ahead and get started on PR 1 (on its own branch)
+
+## Prompt 6 (2026-03-24)
+
+Yes, create a PR for this, but you'll need to actually push main first since this is a brand new repo and I haven't pushed anything yet. I've set up the remote origin, though, so you should be good to go.
+
+## Prompt 7 (2026-03-24)
+
+I'm noticing we're using node version 20 in CI and that we don't have a node version set locally. Let's be explicit about this. We can use the latest LTS node version (should be 24 I think?)
+
+## Prompt 8 (2026-03-24)
+
+Let's use .node-version as the file instead of .nvmrc as that's more version-manager-agnostic (I use fnm locally, which does actually respect .nvmrc, but still better to use .node-version IMO)
