@@ -13,7 +13,12 @@ function required(name: string): string {
   return value;
 }
 
-export const config = {
+export interface Config {
+  databaseUrl: string;
+  redisUrl: string;
+}
+
+export const config: Config = {
   databaseUrl: required('DATABASE_URL'),
   redisUrl: required('REDIS_URL'),
-} as const;
+};

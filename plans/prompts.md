@@ -125,3 +125,7 @@ Setting the path to .env.local will break in production
 ## Prompt 12 (2026-03-24)
 
 Can we use the latest versions of postgres(18) and redis(8) in docker? You'll also need to update the volume mount for the latest version of postgres to remove /data at the end
+
+## Prompt 13 (2026-03-24)
+
+One last thing, let's create an actual type for our config
