@@ -145,3 +145,11 @@ Let's add the db:studio script to call drizzle-kit studio, I find that very usef
 ## Prompt 17 (2026-03-24)
 
 PR 3 has been merged to main. Make sure to pull the latest changes and move on to PR 4
+
+## Prompt 18 (2026-03-24)
+
+PR 4 has been merged to main. Make sure to pull the latest changes and move on to PR 5
+
+## Prompt 19 (2026-03-24)
+
+It looks like the integration tests don't run as part of CI
