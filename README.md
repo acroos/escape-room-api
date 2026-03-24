@@ -123,17 +123,19 @@ Place a 5-minute hold on a room/timeslot.
 ```bash
 curl -X POST http://localhost:3000/api/reservations/hold \
   -H "Content-Type: application/json" \
-  -d '{"room_id": "<ROOM_UUID>", "timeslot": "2026-06-01T14:00:00.000Z"}'
+  -d '{"room_id": "<ROOM_UUID>", "timeslot": 1780333200}'
 ```
 
 **Responses**: `201` with `{ reservation_code }` | `400` (invalid timeslot or room) | `409` (already held or confirmed)
+
+> **Note**: `timeslot` is seconds from epoch and must be divisible by 3600 (on the hour).
 
 ### GET /api/reservations/:room_id/:timeslot
 
 Check hold status and remaining TTL.
 
 ```bash
-curl http://localhost:3000/api/reservations/<ROOM_UUID>/2026-06-01T14:00:00.000Z \
+curl http://localhost:3000/api/reservations/<ROOM_UUID>/1780333200 \
   -H "x-reservation-code: <CODE>"
 ```
 
@@ -147,7 +149,7 @@ Confirm a held reservation (persists to Postgres).
 curl -X POST http://localhost:3000/api/reservations/confirm \
   -H "Content-Type: application/json" \
   -H "x-reservation-code: <CODE>" \
-  -d '{"room_id": "<ROOM_UUID>", "timeslot": "2026-06-01T14:00:00.000Z", "email": "user@example.com", "full_name": "Jane Doe"}'
+  -d '{"room_id": "<ROOM_UUID>", "timeslot": 1780333200, "email": "user@example.com", "full_name": "Jane Doe"}'
 ```
 
 **Responses**: `201` with `{ reservation_id }` | `403` (wrong code or expired)
@@ -160,7 +162,7 @@ Release a hold.
 curl -X POST http://localhost:3000/api/reservations/release \
   -H "Content-Type: application/json" \
   -H "x-reservation-code: <CODE>" \
-  -d '{"room_id": "<ROOM_UUID>", "timeslot": "2026-06-01T14:00:00.000Z"}'
+  -d '{"room_id": "<ROOM_UUID>", "timeslot": 1780333200}'
 ```
 
 **Responses**: `200` with `{ success: true }` | `403` (wrong code)
@@ -192,4 +194,4 @@ curl -X POST http://localhost:3000/api/reservations/release \
 
 | Pattern                          | Value            | TTL                                  |
 | -------------------------------- | ---------------- | ------------------------------------ |
-| `room:{room_id}:{ISO-timestamp}` | reservation code | 300s (hold), 15s (confirm extension) |
+| `room:{room_id}:{epoch-seconds}` | reservation code | 300s (hold), 15s (confirm extension) |

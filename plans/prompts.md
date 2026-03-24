@@ -163,3 +163,7 @@ One thing I do want to note: my environment variable for DATABASE_URL in product
 ## Prompt 21 (2026-03-24)
 
 My production POSTGRES_URL doesn't include the db name, so let's update the drizzle config and the local env vars to set the database name separate from the url
+
+## Prompt 22 (2026-03-24)
+
+OK, one more improvement I'd like to make. The timeslot should always come in as just a number (seconds from epoch). This makes our GET routes much cleaner and our redis keys as well

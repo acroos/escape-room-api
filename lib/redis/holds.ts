@@ -15,7 +15,7 @@ redis.call('SET', KEYS[1], ARGV[1], 'EX', ARGV[2])
 return 1
 `;
 
-export function buildRedisKey(roomId: string, timeslot: string): string {
+export function buildRedisKey(roomId: string, timeslot: number): string {
   return `room:${roomId}:${timeslot}`;
 }
 

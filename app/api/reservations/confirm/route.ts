@@ -12,7 +12,7 @@ export async function POST(request: Request) {
   const body = await request.json();
   const { room_id, timeslot, email, full_name } = body;
 
-  if (!room_id || !timeslot || !email || !full_name) {
+  if (!room_id || timeslot === undefined || !email || !full_name) {
     return Response.json(
       { error: 'room_id, timeslot, email, and full_name are required' },
       { status: 400 },
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 
   const result = await confirmReservation(
     room_id,
-    new Date(timeslot),
+    Number(timeslot),
     code,
     email,
     full_name,

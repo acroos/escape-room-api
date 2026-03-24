@@ -32,17 +32,17 @@ export type ConfirmResult =
   | { ok: true; reservationId: string }
   | { ok: false; reason: 'expired' | 'code_mismatch' };
 
-export function validateTimeslot(timeslot: Date): boolean {
-  return (
-    timeslot.getMinutes() === 0 &&
-    timeslot.getSeconds() === 0 &&
-    timeslot.getMilliseconds() === 0
-  );
+export function validateTimeslot(timeslot: number): boolean {
+  return timeslot > 0 && timeslot % 3600 === 0;
+}
+
+function timeslotToDate(timeslot: number): Date {
+  return new Date(timeslot * 1000);
 }
 
 export async function holdRoom(
   roomId: string,
-  timeslot: Date,
+  timeslot: number,
 ): Promise<HoldResult> {
   if (!validateTimeslot(timeslot)) {
     return { ok: false, reason: 'invalid_timeslot' };
@@ -55,14 +55,14 @@ export async function holdRoom(
 
   const existingReservation = await reservationsRepo.findByRoomAndTimeslot(
     roomId,
-    timeslot,
+    timeslotToDate(timeslot),
   );
   if (existingReservation) {
     return { ok: false, reason: 'already_confirmed' };
   }
 
   const code = crypto.randomUUID();
-  const key = buildRedisKey(roomId, timeslot.toISOString());
+  const key = buildRedisKey(roomId, timeslot);
   const acquired = await setHold(key, code);
   if (!acquired) {
     return { ok: false, reason: 'already_held' };
@@ -73,10 +73,10 @@ export async function holdRoom(
 
 export async function getHold(
   roomId: string,
-  timeslot: Date,
+  timeslot: number,
   code: string,
 ): Promise<GetHoldResult> {
-  const key = buildRedisKey(roomId, timeslot.toISOString());
+  const key = buildRedisKey(roomId, timeslot);
   const hold = await getHoldFromStore(key);
   if (!hold) {
     return { ok: false, reason: 'not_found' };
@@ -89,10 +89,10 @@ export async function getHold(
 
 export async function releaseHold(
   roomId: string,
-  timeslot: Date,
+  timeslot: number,
   code: string,
 ): Promise<ReleaseResult> {
-  const key = buildRedisKey(roomId, timeslot.toISOString());
+  const key = buildRedisKey(roomId, timeslot);
   const hold = await getHoldFromStore(key);
   if (!hold) {
     return { ok: false, reason: 'not_found' };
@@ -106,12 +106,12 @@ export async function releaseHold(
 
 export async function confirmReservation(
   roomId: string,
-  timeslot: Date,
+  timeslot: number,
   code: string,
   email: string,
   fullName: string,
 ): Promise<ConfirmResult> {
-  const key = buildRedisKey(roomId, timeslot.toISOString());
+  const key = buildRedisKey(roomId, timeslot);
 
   const extendResult = await extendHold(key, code);
   if (extendResult === 'expired') {
@@ -123,7 +123,7 @@ export async function confirmReservation(
 
   const reservation = await reservationsRepo.create({
     roomId,
-    timeslot,
+    timeslot: timeslotToDate(timeslot),
     email,
     fullName,
   });
