@@ -15,6 +15,7 @@ export type HoldResult =
       ok: false;
       reason:
         | 'invalid_timeslot'
+        | 'timeslot_in_past'
         | 'room_not_found'
         | 'already_confirmed'
         | 'already_held';
@@ -48,6 +49,10 @@ export async function holdRoom(
 ): Promise<HoldResult> {
   if (!validateTimeslot(timeslot)) {
     return { ok: false, reason: 'invalid_timeslot' };
+  }
+
+  if (timeslot <= Date.now()) {
+    return { ok: false, reason: 'timeslot_in_past' };
   }
 
   const room = await roomsRepo.findById(roomId);

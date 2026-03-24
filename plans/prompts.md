@@ -167,3 +167,7 @@ My production POSTGRES_URL doesn't include the db name, so let's update the driz
 ## Prompt 22 (2026-03-24)
 
 OK, one more improvement I'd like to make. The timeslot should always come in as just a number (seconds from epoch). This makes our GET routes much cleaner and our redis keys as well
+
+## Prompt 24 (2026-03-24)
+
+OK, I want to add two little nice-to-haves before wrapping this up. First, let's add a GET /rooms endpoint that just gets all rooms (go ahead and just return the whole object, just make sure the ID is included, this can be used by anyone to find a room to test against). Second, let's validate that the hold is being placed in the future, no point in reserving a room in the past. Should return a 400 if the time for the room is in the past

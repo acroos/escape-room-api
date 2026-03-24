@@ -47,6 +47,13 @@ describe('holdRoom', () => {
     expect(result).toEqual({ ok: false, reason: 'invalid_timeslot' });
   });
 
+  it('returns timeslot_in_past when timeslot is in the past', async () => {
+    // A valid on-the-hour timeslot, but in the past
+    const pastTimeslot = 1704067200000; // 2024-01-01T00:00:00Z
+    const result = await holdRoom(VALID_ROOM_ID, pastTimeslot);
+    expect(result).toEqual({ ok: false, reason: 'timeslot_in_past' });
+  });
+
   it('returns room_not_found when room does not exist', async () => {
     mockedRoomsRepo.findById.mockResolvedValue(null);
 

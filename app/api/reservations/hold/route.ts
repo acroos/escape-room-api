@@ -16,6 +16,7 @@ export async function POST(request: Request) {
   if (!result.ok) {
     const statusMap = {
       invalid_timeslot: 400,
+      timeslot_in_past: 400,
       room_not_found: 400,
       already_confirmed: 409,
       already_held: 409,

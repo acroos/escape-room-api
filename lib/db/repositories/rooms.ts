@@ -8,6 +8,10 @@ export type Room = {
   createdAt: Date;
 };
 
+export async function findAll(): Promise<Room[]> {
+  return db.select().from(rooms);
+}
+
 export async function findById(roomId: string): Promise<Room | null> {
   const results = await db
     .select()
