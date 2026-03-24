@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "test": "jest"
   },
   "dependencies": {
     "next": "16.2.1",
@@ -14,11 +18,17 @@
     "react-dom": "19.2.4"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.1",
+    "eslint-config-prettier": "^10.1.8",
+    "jest": "^30.3.0",
+    "prettier": "^3.8.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }
