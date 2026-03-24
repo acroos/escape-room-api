@@ -1,19 +1,11 @@
-import dotenv from 'dotenv';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { sql } from 'drizzle-orm';
 import postgres from 'postgres';
+import { config } from '../config';
 import { rooms } from './schema';
 
-dotenv.config({ path: '.env.local', override: true });
-dotenv.config({ path: '.env', override: false });
-
 async function seed() {
-  const databaseUrl = process.env.DATABASE_URL;
-  if (!databaseUrl) {
-    throw new Error('DATABASE_URL is required to run the seed script');
-  }
-
-  const client = postgres(databaseUrl);
+  const client = postgres(config.databaseUrl);
   const db = drizzle(client);
 
   console.log('Truncating tables...');

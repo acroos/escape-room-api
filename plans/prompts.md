@@ -133,3 +133,7 @@ One last thing, let's create an actual type for our config
 ## Prompt 14 (2026-03-24)
 
 PR 2 has been merged to main. Make sure to pull the latest changes and move on to PR 3
+
+## Prompt 15 (2026-03-24)
+
+I notice you've used process.env directly in a few places, is there a reason to not use our typed config?
