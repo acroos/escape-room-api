@@ -2,6 +2,8 @@
 
 A reservation API for escape rooms built with Next.js 16, Postgres, and Redis.
 
+> **Want to try it out?** The API is deployed at `https://escape-room-api-acroos.vercel.app`. See [DEMO_STEPS.md](DEMO_STEPS.md) for a guided walkthrough.
+
 ## Quickstart
 
 ### Prerequisites

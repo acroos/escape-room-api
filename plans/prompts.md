@@ -171,3 +171,11 @@ OK, one more improvement I'd like to make. The timeslot should always come in as
 ## Prompt 24 (2026-03-24)
 
 OK, I want to add two little nice-to-haves before wrapping this up. First, let's add a GET /rooms endpoint that just gets all rooms (go ahead and just return the whole object, just make sure the ID is included, this can be used by anyone to find a room to test against). Second, let's validate that the hold is being placed in the future, no point in reserving a room in the past. Should return a 400 if the time for the room is in the past
+
+## Prompt 25 (2026-03-24)
+
+I noticed you didn't update the README with the new endpoint
+
+## Prompt 26 (2026-03-24)
+
+Now one last thing, write me a quick note at the top of the README to tell people how to test this against the deployed app. The URL of the app is: https://escape-room-api-acroos.vercel.app/. Give them a quick set of steps for finding a room, holding it, releasing it, holding it again, confirming it, (and then steps for validating when you _cannot_ hold a room). Maybe we should actually just put this in a separate file named DEMO_STEPS.md and link it at the top of the README.
