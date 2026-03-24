@@ -3,7 +3,10 @@ import postgres from 'postgres';
 import { config } from '@/lib/config';
 import * as schema from './schema';
 
-const client = postgres(config.databaseUrl, { prepare: false });
+const client = postgres(config.postgresUrl, {
+  prepare: false,
+  database: config.postgresDatabase,
+});
 
 export const db = drizzle(client, { schema });
 
