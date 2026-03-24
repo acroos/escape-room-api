@@ -101,3 +101,7 @@ I think this looks good, before getting started on any of these PRs, let's commi
 ## Prompt 6 (2026-03-24)
 
 Yes, create a PR for this, but you'll need to actually push main first since this is a brand new repo and I haven't pushed anything yet. I've set up the remote origin, though, so you should be good to go.
+
+## Prompt 7 (2026-03-24)
+
+I'm noticing we're using node version 20 in CI and that we don't have a node version set locally. Let's be explicit about this. We can use the latest LTS node version (should be 24 I think?)
