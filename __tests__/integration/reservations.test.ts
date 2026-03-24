@@ -64,7 +64,7 @@ afterAll(async () => {
   await db.execute(
     sql`TRUNCATE TABLE reservations, rooms RESTART IDENTITY CASCADE`,
   );
-  redis.disconnect();
+  await redis.quit();
   await closeDb();
 });
 
