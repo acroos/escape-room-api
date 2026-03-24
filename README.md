@@ -123,19 +123,19 @@ Place a 5-minute hold on a room/timeslot.
 ```bash
 curl -X POST http://localhost:3000/api/reservations/hold \
   -H "Content-Type: application/json" \
-  -d '{"room_id": "<ROOM_UUID>", "timeslot": 1780333200}'
+  -d '{"room_id": "<ROOM_UUID>", "timeslot": 1780333200000}'
 ```
 
 **Responses**: `201` with `{ reservation_code }` | `400` (invalid timeslot or room) | `409` (already held or confirmed)
 
-> **Note**: `timeslot` is seconds from epoch and must be divisible by 3600 (on the hour).
+> **Note**: `timeslot` is milliseconds from epoch and must be divisible by 3,600,000 (on the hour).
 
 ### GET /api/reservations/:room_id/:timeslot
 
 Check hold status and remaining TTL.
 
 ```bash
-curl http://localhost:3000/api/reservations/<ROOM_UUID>/1780333200 \
+curl http://localhost:3000/api/reservations/<ROOM_UUID>/1780333200000 \
   -H "x-reservation-code: <CODE>"
 ```
 
@@ -149,7 +149,7 @@ Confirm a held reservation (persists to Postgres).
 curl -X POST http://localhost:3000/api/reservations/confirm \
   -H "Content-Type: application/json" \
   -H "x-reservation-code: <CODE>" \
-  -d '{"room_id": "<ROOM_UUID>", "timeslot": 1780333200, "email": "user@example.com", "full_name": "Jane Doe"}'
+  -d '{"room_id": "<ROOM_UUID>", "timeslot": 1780333200000, "email": "user@example.com", "full_name": "Jane Doe"}'
 ```
 
 **Responses**: `201` with `{ reservation_id }` | `403` (wrong code or expired)
@@ -162,7 +162,7 @@ Release a hold.
 curl -X POST http://localhost:3000/api/reservations/release \
   -H "Content-Type: application/json" \
   -H "x-reservation-code: <CODE>" \
-  -d '{"room_id": "<ROOM_UUID>", "timeslot": 1780333200}'
+  -d '{"room_id": "<ROOM_UUID>", "timeslot": 1780333200000}'
 ```
 
 **Responses**: `200` with `{ success: true }` | `403` (wrong code)

@@ -167,3 +167,7 @@ My production POSTGRES_URL doesn't include the db name, so let's update the driz
 ## Prompt 22 (2026-03-24)
 
 OK, one more improvement I'd like to make. The timeslot should always come in as just a number (seconds from epoch). This makes our GET routes much cleaner and our redis keys as well
+
+## Prompt 23 (2026-03-24)
+
+Getting an error on the hold endpoint - timeslot conversion was wrong. Passed milliseconds (1780322400000) but service was multiplying by 1000 again. Switch to accept milliseconds instead.

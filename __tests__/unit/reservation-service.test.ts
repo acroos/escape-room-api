@@ -32,8 +32,8 @@ const mockedRoomsRepo = jest.mocked(roomsRepo);
 const mockedReservationsRepo = jest.mocked(reservationsRepo);
 
 const VALID_ROOM_ID = 'a1b2c3d4-e5f6-7890-abcd-ef1234567890';
-// 2026-04-01T10:00:00Z
-const VALID_TIMESLOT = 1775048400;
+// 2026-04-01T10:00:00Z in ms
+const VALID_TIMESLOT = 1775048400000;
 const VALID_CODE = 'test-reservation-code';
 
 beforeEach(() => {
@@ -42,8 +42,8 @@ beforeEach(() => {
 
 describe('holdRoom', () => {
   it('returns invalid_timeslot when timeslot is not on the hour', async () => {
-    // Not divisible by 3600
-    const result = await holdRoom(VALID_ROOM_ID, 1775050200);
+    // Not divisible by 3_600_000
+    const result = await holdRoom(VALID_ROOM_ID, 1775048400000 + 1_800_000);
     expect(result).toEqual({ ok: false, reason: 'invalid_timeslot' });
   });
 
@@ -63,7 +63,7 @@ describe('holdRoom', () => {
     mockedReservationsRepo.findByRoomAndTimeslot.mockResolvedValue({
       id: 'existing-id',
       roomId: VALID_ROOM_ID,
-      timeslot: new Date(VALID_TIMESLOT * 1000),
+      timeslot: new Date(VALID_TIMESLOT),
       email: 'test@test.com',
       fullName: 'Test User',
       createdAt: new Date(),
@@ -196,7 +196,7 @@ describe('confirmReservation', () => {
     expect(result).toEqual({ ok: true, reservationId: 'new-reservation-id' });
     expect(mockedReservationsRepo.create).toHaveBeenCalledWith({
       roomId: VALID_ROOM_ID,
-      timeslot: new Date(VALID_TIMESLOT * 1000),
+      timeslot: new Date(VALID_TIMESLOT),
       email: 'test@test.com',
       fullName: 'Test User',
     });
