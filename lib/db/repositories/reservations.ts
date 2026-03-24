@@ -2,7 +2,19 @@ import { and, eq } from 'drizzle-orm';
 import { db } from '@/lib/db';
 import { reservations } from '@/lib/db/schema';
 
-export async function findByRoomAndTimeslot(roomId: string, timeslot: Date) {
+export type Reservation = {
+  id: string;
+  roomId: string;
+  timeslot: Date;
+  email: string;
+  fullName: string;
+  createdAt: Date;
+};
+
+export async function findByRoomAndTimeslot(
+  roomId: string,
+  timeslot: Date,
+): Promise<Reservation | null> {
   const results = await db
     .select()
     .from(reservations)

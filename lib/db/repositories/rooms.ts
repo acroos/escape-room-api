@@ -2,7 +2,13 @@ import { eq } from 'drizzle-orm';
 import { db } from '@/lib/db';
 import { rooms } from '@/lib/db/schema';
 
-export async function findById(roomId: string) {
+export type Room = {
+  id: string;
+  name: string;
+  createdAt: Date;
+};
+
+export async function findById(roomId: string): Promise<Room | null> {
   const results = await db
     .select()
     .from(rooms)
