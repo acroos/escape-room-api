@@ -113,3 +113,7 @@ Let's use .node-version as the file instead of .nvmrc as that's more version-man
 ## Prompt 9 (2026-03-24)
 
 PR 1 has been merged to main. Make sure to pull the latest changes and move on to PR 2
+
+## Prompt 10 (2026-03-24)
+
+Do we not need to import dotenv in config.ts? I also prefer if we call the config with { override: true }
