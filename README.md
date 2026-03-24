@@ -114,7 +114,17 @@ escape-room-api/
 
 ## API
 
-All endpoints are under `/api/reservations`. The `x-reservation-code` header is used for lightweight auth on get/confirm/release.
+The `x-reservation-code` header is used for lightweight auth on get/confirm/release.
+
+### GET /api/rooms
+
+List all rooms.
+
+```bash
+curl http://localhost:3000/api/rooms
+```
+
+**Responses**: `200` with `[{ id, name, createdAt }, ...]`
 
 ### POST /api/reservations/hold
 
@@ -126,9 +136,9 @@ curl -X POST http://localhost:3000/api/reservations/hold \
   -d '{"room_id": "<ROOM_UUID>", "timeslot": 1780333200000}'
 ```
 
-**Responses**: `201` with `{ reservation_code }` | `400` (invalid timeslot or room) | `409` (already held or confirmed)
+**Responses**: `201` with `{ reservation_code }` | `400` (invalid timeslot, past timeslot, or unknown room) | `409` (already held or confirmed)
 
-> **Note**: `timeslot` is milliseconds from epoch and must be divisible by 3,600,000 (on the hour).
+> **Note**: `timeslot` is milliseconds from epoch, must be divisible by 3,600,000 (on the hour), and must be in the future.
 
 ### GET /api/reservations/:room_id/:timeslot
 
