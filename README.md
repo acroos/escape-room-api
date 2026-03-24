@@ -37,20 +37,22 @@ npm run dev
 
 ### Available scripts
 
-| Script                 | Description                      |
-| ---------------------- | -------------------------------- |
-| `npm run dev`          | Start Next.js development server |
-| `npm run build`        | Build for production             |
-| `npm run start`        | Start production server          |
-| `npm run lint`         | Run ESLint                       |
-| `npm run format`       | Format code with Prettier        |
-| `npm run format:check` | Check formatting (CI)            |
-| `npm run typecheck`    | Run TypeScript type checking     |
-| `npm test`             | Run tests with Jest              |
-| `npm run db:generate`  | Generate Drizzle migration files |
-| `npm run db:migrate`   | Apply migrations to database     |
-| `npm run db:seed`      | Seed database (truncates first)  |
-| `npm run db:studio`    | Open Drizzle Studio GUI          |
+| Script                     | Description                             |
+| -------------------------- | --------------------------------------- |
+| `npm run dev`              | Start Next.js development server        |
+| `npm run build`            | Build for production                    |
+| `npm run start`            | Start production server                 |
+| `npm run lint`             | Run ESLint                              |
+| `npm run format`           | Format code with Prettier               |
+| `npm run format:check`     | Check formatting (CI)                   |
+| `npm run typecheck`        | Run TypeScript type checking            |
+| `npm test`                 | Run unit tests                          |
+| `npm run test:integration` | Run integration tests (requires Docker) |
+| `npm run test:all`         | Run all tests                           |
+| `npm run db:generate`      | Generate Drizzle migration files        |
+| `npm run db:migrate`       | Apply migrations to database            |
+| `npm run db:seed`          | Seed database (truncates first)         |
+| `npm run db:studio`        | Open Drizzle Studio GUI                 |
 
 ### Environment variables
 
@@ -67,10 +69,13 @@ All env vars are validated at startup via `lib/config.ts`. If any are missing, t
 escape-room-api/
 ├── .github/workflows/ci.yml        # CI pipeline (format, lint, typecheck, test)
 ├── app/
-│   ├── layout.tsx                   # Root layout
-│   ├── page.tsx                     # Home page
-│   ├── globals.css
-│   └── page.module.css
+│   ├── api/reservations/            # PRESENTATION LAYER
+│   │   ├── [room_id]/[timeslot]/route.ts   # GET  — check hold status
+│   │   ├── hold/route.ts                   # POST — place a hold
+│   │   ├── confirm/route.ts                # POST — confirm reservation
+│   │   └── release/route.ts                # POST — release hold
+│   ├── layout.tsx
+│   └── page.tsx
 ├── lib/
 │   ├── config.ts                    # Typed env config (validates + exports all env vars)
 │   ├── db/                          # STORAGE LAYER (Postgres)
@@ -86,21 +91,21 @@ escape-room-api/
 │   └── reservations/                # BUSINESS LOGIC LAYER
 │       └── service.ts               # holdRoom, getHold, releaseHold, confirmReservation
 ├── __tests__/
-│   └── unit/
-│       ├── validation.test.ts       # Timeslot validation + Redis key builder
-│       └── reservation-service.test.ts  # Service layer (mocked storage)
+│   ├── unit/                        # Mocked tests (no Docker needed)
+│   │   ├── validation.test.ts
+│   │   └── reservation-service.test.ts
+│   └── integration/                 # Full-stack tests (requires Docker)
+│       └── reservations.test.ts
 ├── drizzle/                         # Generated migration files
 ├── plans/
-│   ├── escape-room-api.md          # Implementation plan
-│   └── prompts.md                  # Prompt log
-├── docker-compose.yml              # Postgres + Redis for local development
-├── drizzle.config.ts               # Drizzle Kit config
-├── .env.template                   # Template for env vars (committed)
-├── .env.local                      # Local env vars (gitignored)
-├── .prettierrc                     # Prettier config
-├── .prettierignore
-├── eslint.config.mjs               # ESLint config (Next.js + Prettier)
-├── jest.config.ts                  # Jest config (via next/jest)
+│   ├── escape-room-api.md
+│   └── prompts.md
+├── docker-compose.yml
+├── drizzle.config.ts
+├── .env.template
+├── .prettierrc
+├── eslint.config.mjs
+├── jest.config.ts
 ├── next.config.ts
 ├── tsconfig.json
 └── package.json
@@ -108,7 +113,56 @@ escape-room-api/
 
 ## API
 
-_No API routes implemented yet. See [plans/escape-room-api.md](plans/escape-room-api.md) for the full API design._
+All endpoints are under `/api/reservations`. The `x-reservation-code` header is used for lightweight auth on get/confirm/release.
+
+### POST /api/reservations/hold
+
+Place a 5-minute hold on a room/timeslot.
+
+```bash
+curl -X POST http://localhost:3000/api/reservations/hold \
+  -H "Content-Type: application/json" \
+  -d '{"room_id": "<ROOM_UUID>", "timeslot": "2026-06-01T14:00:00.000Z"}'
+```
+
+**Responses**: `201` with `{ reservation_code }` | `400` (invalid timeslot or room) | `409` (already held or confirmed)
+
+### GET /api/reservations/:room_id/:timeslot
+
+Check hold status and remaining TTL.
+
+```bash
+curl http://localhost:3000/api/reservations/<ROOM_UUID>/2026-06-01T14:00:00.000Z \
+  -H "x-reservation-code: <CODE>"
+```
+
+**Responses**: `200` with `{ ttl }` | `403` (wrong code) | `404` (no hold)
+
+### POST /api/reservations/confirm
+
+Confirm a held reservation (persists to Postgres).
+
+```bash
+curl -X POST http://localhost:3000/api/reservations/confirm \
+  -H "Content-Type: application/json" \
+  -H "x-reservation-code: <CODE>" \
+  -d '{"room_id": "<ROOM_UUID>", "timeslot": "2026-06-01T14:00:00.000Z", "email": "user@example.com", "full_name": "Jane Doe"}'
+```
+
+**Responses**: `201` with `{ reservation_id }` | `403` (wrong code or expired)
+
+### POST /api/reservations/release
+
+Release a hold.
+
+```bash
+curl -X POST http://localhost:3000/api/reservations/release \
+  -H "Content-Type: application/json" \
+  -H "x-reservation-code: <CODE>" \
+  -d '{"room_id": "<ROOM_UUID>", "timeslot": "2026-06-01T14:00:00.000Z"}'
+```
+
+**Responses**: `200` with `{ success: true }` | `403` (wrong code)
 
 ## Data Models
 
@@ -132,3 +186,9 @@ _No API routes implemented yet. See [plans/escape-room-api.md](plans/escape-room
 | `created_at` | timestamp with time zone | default `now()`, not null       |
 
 **Unique constraint**: `room_timeslot_unique` on `(room_id, timeslot)` — one reservation per room per timeslot.
+
+### Redis keys
+
+| Pattern                          | Value            | TTL                                  |
+| -------------------------------- | ---------------- | ------------------------------------ |
+| `room:{room_id}:{ISO-timestamp}` | reservation code | 300s (hold), 15s (confirm extension) |
