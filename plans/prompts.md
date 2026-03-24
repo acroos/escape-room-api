@@ -141,3 +141,7 @@ I notice you've used process.env directly in a few places, is there a reason to 
 ## Prompt 16 (2026-03-24)
 
 Let's add the db:studio script to call drizzle-kit studio, I find that very useful
+
+## Prompt 17 (2026-03-24)
+
+PR 3 has been merged to main. Make sure to pull the latest changes and move on to PR 4

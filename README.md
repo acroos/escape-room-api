@@ -73,13 +73,22 @@ escape-room-api/
 │   └── page.module.css
 ├── lib/
 │   ├── config.ts                    # Typed env config (validates + exports all env vars)
-│   └── db/
-│       ├── index.ts                 # Drizzle client
-│       ├── schema.ts                # rooms + reservations tables
-│       ├── seed.ts                  # Seed script (truncates + inserts sample data)
-│       └── repositories/
-│           ├── rooms.ts             # findById
-│           └── reservations.ts      # findByRoomAndTimeslot, create
+│   ├── db/                          # STORAGE LAYER (Postgres)
+│   │   ├── index.ts                 # Drizzle client
+│   │   ├── schema.ts                # rooms + reservations tables
+│   │   ├── seed.ts                  # Seed script (truncates + inserts sample data)
+│   │   └── repositories/
+│   │       ├── rooms.ts             # findById
+│   │       └── reservations.ts      # findByRoomAndTimeslot, create
+│   ├── redis/                       # STORAGE LAYER (Redis)
+│   │   ├── index.ts                 # ioredis client
+│   │   └── holds.ts                 # setHold, getHold, deleteHold, extendHold (Lua)
+│   └── reservations/                # BUSINESS LOGIC LAYER
+│       └── service.ts               # holdRoom, getHold, releaseHold, confirmReservation
+├── __tests__/
+│   └── unit/
+│       ├── validation.test.ts       # Timeslot validation + Redis key builder
+│       └── reservation-service.test.ts  # Service layer (mocked storage)
 ├── drizzle/                         # Generated migration files
 ├── plans/
 │   ├── escape-room-api.md          # Implementation plan
