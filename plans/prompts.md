@@ -105,3 +105,7 @@ Yes, create a PR for this, but you'll need to actually push main first since thi
 ## Prompt 7 (2026-03-24)
 
 I'm noticing we're using node version 20 in CI and that we don't have a node version set locally. Let's be explicit about this. We can use the latest LTS node version (should be 24 I think?)
+
+## Prompt 8 (2026-03-24)
+
+Let's use .node-version as the file instead of .nvmrc as that's more version-manager-agnostic (I use fnm locally, which does actually respect .nvmrc, but still better to use .node-version IMO)

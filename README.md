@@ -6,7 +6,7 @@ A reservation API for escape rooms built with Next.js 16, Postgres, and Redis.
 
 ### Prerequisites
 
-- Node.js 24 (see `.nvmrc`)
+- Node.js 24 (see `.node-version`)
 - npm
 
 ### Install dependencies
