@@ -58,7 +58,7 @@ npm run dev
 
 | Variable       | Description                | Default (local)                                             |
 | -------------- | -------------------------- | ----------------------------------------------------------- |
-| `DATABASE_URL` | Postgres connection string | `postgresql://postgres:postgres@localhost:5432/escape_room` |
+| `POSTGRES_URL` | Postgres connection string | `postgresql://postgres:postgres@localhost:5432/escape_room` |
 | `REDIS_URL`    | Redis connection string    | `redis://localhost:6379`                                    |
 
 All env vars are validated at startup via `lib/config.ts`. If any are missing, the app will throw immediately with a clear error message.

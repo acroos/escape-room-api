@@ -19,6 +19,6 @@ export interface Config {
 }
 
 export const config: Config = {
-  databaseUrl: required('DATABASE_URL'),
+  databaseUrl: required('POSTGRES_URL'),
   redisUrl: required('REDIS_URL'),
 };

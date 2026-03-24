@@ -153,3 +153,9 @@ PR 4 has been merged to main. Make sure to pull the latest changes and move on t
 ## Prompt 19 (2026-03-24)
 
 It looks like the integration tests don't run as part of CI
+
+## Prompt 20 (2026-03-24)
+
+No we can skip these. The test sounds nice but I'll just prioritize fast tests for now as this simply won't happen in my demo situation.
+
+One thing I do want to note: my environment variable for DATABASE_URL in production is actually POSTGRES_URL. Let's change the name in our code so I don't have to rename it in vercel
