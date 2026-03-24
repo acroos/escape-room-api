@@ -109,3 +109,7 @@ I'm noticing we're using node version 20 in CI and that we don't have a node ver
 ## Prompt 8 (2026-03-24)
 
 Let's use .node-version as the file instead of .nvmrc as that's more version-manager-agnostic (I use fnm locally, which does actually respect .nvmrc, but still better to use .node-version IMO)
+
+## Prompt 9 (2026-03-24)
+
+PR 1 has been merged to main. Make sure to pull the latest changes and move on to PR 2

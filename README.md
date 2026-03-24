@@ -8,11 +8,19 @@ A reservation API for escape rooms built with Next.js 16, Postgres, and Redis.
 
 - Node.js 24 (see `.node-version`)
 - npm
+- Docker (for Postgres and Redis)
 
-### Install dependencies
+### Setup
 
 ```bash
+# Install dependencies
 npm install
+
+# Copy environment template
+cp .env.template .env.local
+
+# Start Postgres and Redis
+docker compose up -d
 ```
 
 ### Run the development server
@@ -34,6 +42,15 @@ npm run dev
 | `npm run typecheck`    | Run TypeScript type checking     |
 | `npm test`             | Run tests with Jest              |
 
+### Environment variables
+
+| Variable       | Description                | Default (local)                                             |
+| -------------- | -------------------------- | ----------------------------------------------------------- |
+| `DATABASE_URL` | Postgres connection string | `postgresql://postgres:postgres@localhost:5432/escape_room` |
+| `REDIS_URL`    | Redis connection string    | `redis://localhost:6379`                                    |
+
+All env vars are validated at startup via `lib/config.ts`. If any are missing, the app will throw immediately with a clear error message.
+
 ## Project Structure
 
 ```
@@ -44,9 +61,14 @@ escape-room-api/
 │   ├── page.tsx                # Home page
 │   ├── globals.css
 │   └── page.module.css
+├── lib/
+│   └── config.ts              # Typed env config (validates + exports all env vars)
 ├── plans/
 │   ├── escape-room-api.md     # Implementation plan
 │   └── prompts.md             # Prompt log
+├── docker-compose.yml         # Postgres + Redis for local development
+├── .env.template              # Template for env vars (committed)
+├── .env.local                 # Local env vars (gitignored)
 ├── .prettierrc                # Prettier config
 ├── .prettierignore
 ├── eslint.config.mjs          # ESLint config (Next.js + Prettier)
