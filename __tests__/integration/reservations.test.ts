@@ -9,10 +9,10 @@ import { POST as releaseHandler } from '@/app/api/reservations/release/route';
 import type { NextRequest } from 'next/server';
 
 let testRoomId: string;
-// 2026-06-01T14:00:00Z
-const TIMESLOT = 1780333200;
-// 2026-06-01T15:00:00Z
-const TIMESLOT_2 = 1780336800;
+// 2026-06-01T14:00:00Z in ms
+const TIMESLOT = 1780333200000;
+// 2026-06-01T15:00:00Z in ms
+const TIMESLOT_2 = 1780336800000;
 
 function makeRequest(
   url: string,
@@ -103,7 +103,7 @@ describe('POST /api/reservations/hold', () => {
       makeRequest('http://localhost/api/reservations/hold', {
         body: {
           room_id: testRoomId,
-          timeslot: TIMESLOT + 1800,
+          timeslot: TIMESLOT + 1_800_000,
         },
       }),
     );

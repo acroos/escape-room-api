@@ -32,12 +32,14 @@ export type ConfirmResult =
   | { ok: true; reservationId: string }
   | { ok: false; reason: 'expired' | 'code_mismatch' };
 
+const MS_PER_HOUR = 3_600_000;
+
 export function validateTimeslot(timeslot: number): boolean {
-  return timeslot > 0 && timeslot % 3600 === 0;
+  return timeslot > 0 && timeslot % MS_PER_HOUR === 0;
 }
 
 function timeslotToDate(timeslot: number): Date {
-  return new Date(timeslot * 1000);
+  return new Date(timeslot);
 }
 
 export async function holdRoom(
