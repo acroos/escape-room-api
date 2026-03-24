@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:18
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: escape_room
+    volumes:
+      - pgdata:/var/lib/postgresql
+
+  redis:
+    image: redis:8
+    ports:
+      - '6379:6379'
+
+volumes:
+  pgdata:
