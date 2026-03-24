@@ -129,3 +129,15 @@ Can we use the latest versions of postgres(18) and redis(8) in docker? You'll al
 ## Prompt 13 (2026-03-24)
 
 One last thing, let's create an actual type for our config
+
+## Prompt 14 (2026-03-24)
+
+PR 2 has been merged to main. Make sure to pull the latest changes and move on to PR 3
+
+## Prompt 15 (2026-03-24)
+
+I notice you've used process.env directly in a few places, is there a reason to not use our typed config?
+
+## Prompt 16 (2026-03-24)
+
+Let's add the db:studio script to call drizzle-kit studio, I find that very useful
